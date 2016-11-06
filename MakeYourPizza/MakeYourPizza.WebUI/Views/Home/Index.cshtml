@@ -1,0 +1,18 @@
+﻿@model MakeYourPizza.WebUI.Models.IngredientsListViewModel
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <div>
+        @foreach(var i in Model.Ingredients)
+        {
+            <h2>@i.Name</h2>            
+        }
+    </div>
+</body>
+</html>
