@@ -1,0 +1,31 @@
+﻿.homepage .ingredients {
+	list-style-type: none;
+	padding: 0px;
+}
+
+.homepage .ingredients li {
+	display: inline-block;
+	margin-right: -4px;
+}
+
+.homepage .ingredients li img {
+	width: 100%;		
+}
+
+#droppable {
+	min-height: 200px;
+	border: 1px solid #cccccc;
+}
+
+#droppable img {
+	margin-right: -4px;
+}
+
+.homepage .ingredients li.marked img {	
+	height: auto;
+}
+
+div:empty:before {
+	content:attr(data-placeholder);
+	color:gray
+}

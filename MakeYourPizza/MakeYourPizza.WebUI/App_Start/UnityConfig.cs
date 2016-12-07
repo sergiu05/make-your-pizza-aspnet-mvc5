@@ -4,6 +4,7 @@ using Unity.Mvc5;
 using MakeYourPizza.Domain.Abstract;
 using MakeYourPizza.Domain.Entities;
 using MakeYourPizza.Domain.Concrete;
+using MakeYourPizza.WebUI.Controllers;
 
 namespace MakeYourPizza.WebUI
 {
@@ -21,10 +22,10 @@ namespace MakeYourPizza.WebUI
             PizzaDbContext dbContext = new PizzaDbContext();
             container.RegisterInstance(dbContext);
 
-            container.RegisterType<IGenericRepository<Ingredient>, GenericRepository<Ingredient>>(
-                new InjectionConstructor(dbContextType));
-            container.RegisterType<IGenericRepository<Category>, GenericRepository<Category>>(
-                new InjectionConstructor(dbContextType));
+            container.RegisterType(typeof(IGenericRepository<>), typeof(GenericRepository<>), new InjectionConstructor(dbContextType));
+            //container.RegisterType(typeof(CartController), new InjectionFactory((c,t,s) => new CartController(
+            //        container.Resolve<IGenericRepository<Ingredient>>()
+            //    )));
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }
     }

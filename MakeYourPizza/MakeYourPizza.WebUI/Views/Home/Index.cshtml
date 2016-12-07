@@ -1,18 +1,210 @@
 ﻿@model MakeYourPizza.WebUI.Models.IngredientsListViewModel
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
-</head>
-<body>
-    <div>
-        @foreach(var i in Model.Ingredients)
-        {
-            <h2>@i.Name</h2>            
-        }
+<div class="container homepage">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-1">
+            <div id="droppable" class="" data-placeholder="Drag ingredients to this container">
+                
+            </div>
+            <ul class="ingredients">
+                @foreach (var ingredient in Model.Ingredients)
+                {
+                    <li class="ingredient-wrapper" data-id="@ingredient.Id">
+                        <img src="@Url.Content("~/Content/images/" + ingredient.Imagename)" alt="Image of @ingredient.Name" height="100">
+                    </li>
+                }               
+            </ul>
+            <div id="ingredients-alert" class="alert alert-danger">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <section id="cart-content">@Html.Action("Index", "Cart")</section>
+        </div>
     </div>
-</body>
-</html>
+</div>
+
+@section Scripts {
+<script>
+
+(function($,sr){
+
+  // debouncing function from John Hann
+  // http://unscriptable.com/index.php/2009/03/20/debouncing-javascript-methods/
+  var debounce = function (func, threshold, execAsap) {
+      var timeout;
+
+      return function debounced () {
+          var obj = this, args = arguments;
+          function delayed () {
+              if (!execAsap)
+                  func.apply(obj, args);
+              timeout = null;
+          };
+
+          if (timeout)
+              clearTimeout(timeout);
+          else if (execAsap)
+              func.apply(obj, args);
+
+          timeout = setTimeout(delayed, threshold || 100);
+      };
+  }
+  // smartresize
+  jQuery.fn[sr] = function(fn){  return fn ? this.bind('resize', debounce(fn)) : this.trigger(sr); };
+
+})(jQuery,'smartresize');
+
+
+var resizeContainerImages = function() {
+	var container = $('.ingredients'),
+		containerWidth = Math.floor(container.width()),
+		total = 0,
+		row = 1;
+
+	if (container.data('initial-li-width')) {
+		container.find('li.marked').width(container.data('initial-li-width'));
+	} else {
+		container.data('initial-li-width', container.find('li').first().width());
+	}
+	container
+		.find('li')
+		.removeClass('marked')
+		.each(function() {
+			var $this = $(this);
+
+			if (container)
+
+			total += $this.width();
+			if (total > containerWidth) {
+				var prevRowSiblings = $this.prevAll().filter(function(index) {
+					return !$(this).hasClass("marked");
+				});
+				prevRowSiblings.addClass("marked").data("row", row);
+
+				prevRowSiblings.width(Math.floor(containerWidth / prevRowSiblings.length));
+
+				total = $this.width();
+				row++;
+			}
+		});
+};
+
+resizeContainerImages();
+
+$(window).smartresize(resizeContainerImages);
+
+var $droppable = $('#droppable');
+var $ingredients = $(".ingredients");
+
+$ingredients
+	.find('li')
+	.draggable({
+		snap: "#droppable",
+		snapMode: "outer",
+		revert: "invalid",
+		scope: 1
+	});
+
+
+
+$droppable.find('img').each(function() {
+	var $this = $(this);
+
+	$ingredients.find('li').each(function() {
+		var $thisLi = $(this);
+
+		if ($this.data('id') == $thisLi.data('id')) {
+			$thisLi.css("visibility", "hidden");
+		}
+	});
+});
+
+
+
+var getAllItems = function() {
+    return $.ajax({
+        url: '@Url.Action("Index", "Cart")',
+        dataType: 'html'
+    });
+};
+
+var getAllItemsCallback = function(data) {
+    $('#cart-content').html(data);
+};
+
+$droppable.on('click', 'img', function(event) {
+    var $this = $(this),
+        url = '@Url.Action("RemoveFromCart", "Cart")',
+        id = $this.data('id');
+
+    var removeItem = function(url, id) {
+        return $.ajax({
+            url: url,
+            method: "post",
+            data: {id: id},
+            dataType: "json"
+        });
+    };
+
+    $.when(removeItem(url, id)).done(function(data) {
+        $this.remove();
+        $ingredients.find('li[data-id="' + $this.data('id') + '"]').css('visibility', 'visible').animate({
+            top: 0,
+            left: 0
+        }, 500);
+
+        getAllItems()
+                .done(getAllItemsCallback);
+
+    });
+
+});
+
+
+
+$droppable.droppable({
+	tolerance: "touch",
+	accept: ".ingredient-wrapper",
+	drop: function(event, ui) {
+	    var $img = $("<img>", {
+	        "src": ui.draggable.find('img').attr('src'),
+	        "height": 75,
+	        "width": "auto",
+	        "data-id": ui.draggable.data('id')
+	    }),
+        url = '@Url.Action("AddToCart", "Cart")',
+        id = ui.draggable.data('id');
+
+        var addItem = function(url, id) {
+            return $.ajax({
+                url: url,
+                method: "post",
+                data: { id: id },
+                dataType: "json"
+            });
+        };
+
+		$.when(addItem(url, id)).done(function(data) {
+            $img.appendTo($('#droppable'));
+            ui.draggable.css("visibility", "hidden");
+            $('#ingredients-alert').html('');
+
+            getAllItems()
+                    .done(getAllItemsCallback);
+        })
+		.fail(function(jqXHR, textStatus, errorThrown) {
+
+    		ui.draggable.animate({
+    			top: 0,
+    			left: 0
+    		}, 500);
+
+    		$('#ingredients-alert').text(jqXHR.responseJSON.message);
+    	});
+	},
+	scope: 1
+});
+
+</script>
+}
+
