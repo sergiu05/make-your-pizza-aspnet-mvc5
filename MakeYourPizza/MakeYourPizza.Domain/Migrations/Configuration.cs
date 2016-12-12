@@ -1,6 +1,8 @@
 namespace MakeYourPizza.Domain.Migrations
 {
     using Entities;
+    using Microsoft.AspNet.Identity;
+    using Microsoft.AspNet.Identity.EntityFramework;
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
@@ -28,6 +30,40 @@ namespace MakeYourPizza.Domain.Migrations
             //      new Person { FullName = "Rowan Miller" }
             //    );
             //
+            
+            AppRoleManager roleManager = new AppRoleManager(new RoleStore<AppRole>(context));
+            if (!roleManager.RoleExists("Administrator"))
+            {
+                roleManager.Create(new AppRole("Administrator"));
+            }
+            if (!roleManager.RoleExists("User"))
+            {
+                roleManager.Create(new AppRole("User"));
+            }
+
+            AppUserManager userManager = new AppUserManager(new UserStore<AppUser>(context));
+            AppUser adminUser = userManager.FindByName("admin");
+            if (adminUser == null)
+            {
+                userManager.Create(new AppUser { UserName = "admin", Email = "admin@example.com" }, "Admin%1");
+                adminUser = userManager.FindByName("admin");
+            }
+            if (!userManager.IsInRole(adminUser.Id, "Administrator"))
+            {
+                userManager.AddToRole(adminUser.Id, "Administrator");
+            }
+
+            AppUser aUser = userManager.FindByName("john");
+            if (aUser == null)
+            {
+                userManager.Create(new AppUser { UserName = "john", Email = "john@example.com" }, "John%1");
+                aUser = userManager.FindByName("john");
+            }
+            if (!userManager.IsInRole(aUser.Id, "User"))
+            {
+                userManager.AddToRole(aUser.Id, "User");
+            }
+
             context.Categories.AddOrUpdate(x => x.Id, 
                 new Category() { Id = 1, Name = "Crust", CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now },
                 new Category() { Id = 2, Name = "Toppings", CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now },

@@ -5,6 +5,10 @@ using MakeYourPizza.Domain.Abstract;
 using MakeYourPizza.Domain.Entities;
 using MakeYourPizza.Domain.Concrete;
 using MakeYourPizza.WebUI.Controllers;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.Owin.Security;
+using System.Web;
 
 namespace MakeYourPizza.WebUI
 {
@@ -26,6 +30,13 @@ namespace MakeYourPizza.WebUI
             //container.RegisterType(typeof(CartController), new InjectionFactory((c,t,s) => new CartController(
             //        container.Resolve<IGenericRepository<Ingredient>>()
             //    )));
+            container.RegisterType<IUserStore<AppUser>, UserStore<AppUser>>(
+                new InjectionConstructor(dbContextType));
+            container.RegisterType<IAuthenticationManager>(
+                new InjectionFactory(
+                    o => System.Web.HttpContext.Current.GetOwinContext().Authentication
+                )
+            );
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }
     }
