@@ -45,7 +45,7 @@ namespace MakeYourPizza.Domain.Migrations
             AppUser adminUser = userManager.FindByName("admin");
             if (adminUser == null)
             {
-                userManager.Create(new AppUser { UserName = "admin", Email = "admin@example.com" }, "Admin%1");
+                userManager.Create(new AppUser { UserName = "admin", Email = "admin@example.com", EmailConfirmed = true }, "Admin%1");
                 adminUser = userManager.FindByName("admin");
             }
             if (!userManager.IsInRole(adminUser.Id, "Administrator"))
@@ -56,7 +56,7 @@ namespace MakeYourPizza.Domain.Migrations
             AppUser aUser = userManager.FindByName("john");
             if (aUser == null)
             {
-                userManager.Create(new AppUser { UserName = "john", Email = "john@example.com" }, "John%1");
+                userManager.Create(new AppUser { UserName = "john", Email = "john@example.com", EmailConfirmed = true }, "John%1");
                 aUser = userManager.FindByName("john");
             }
             if (!userManager.IsInRole(aUser.Id, "User"))

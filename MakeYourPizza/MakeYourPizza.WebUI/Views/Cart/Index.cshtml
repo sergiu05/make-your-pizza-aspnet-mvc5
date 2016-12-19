@@ -15,11 +15,12 @@
             }
 
             <p>Total: $@Model.Cart.ComputeTotalValue()</p>
-            <p>
-                @*<form action="" method="post">*@
-            <p><button class="btn btn-info" type="submit">Place order</button></p>
-            @*</form>*@
-            </p>
+            <div class="text-center">
+
+
+
+                @Html.ActionLink("Checkout now", "Checkout", "Cart", new { @class = "btn btn-primary" })
+            </div>
         }
         else
         {

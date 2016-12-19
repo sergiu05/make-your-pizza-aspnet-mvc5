@@ -11,6 +11,8 @@ namespace MakeYourPizza.Domain.Entities
 {
     public class AppUser : IdentityUser
     {
+        public virtual List<Order> Orders { get; set; }  
+
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<AppUser> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType

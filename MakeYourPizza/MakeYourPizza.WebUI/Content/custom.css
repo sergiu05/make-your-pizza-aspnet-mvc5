@@ -1,4 +1,8 @@
-﻿.homepage .ingredients {
+﻿nav + .container {
+    margin-top: 51px;
+}
+
+.homepage .ingredients {
 	list-style-type: none;
 	padding: 0px;
 }

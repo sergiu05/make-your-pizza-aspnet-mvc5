@@ -12,10 +12,12 @@ namespace MakeYourPizza.WebUI.Controllers
     public class CartController : Controller
     {
         private IGenericRepository<Ingredient> repository;
+        private IOrderProcessor[] processors;
 
-        public CartController(IGenericRepository<Ingredient> repository)
+        public CartController(IGenericRepository<Ingredient> repository, IOrderProcessor[] processors)
         {
             this.repository = repository;
+            this.processors = processors;
         }
 
         public ActionResult Index()
@@ -55,6 +57,33 @@ namespace MakeYourPizza.WebUI.Controllers
                 Session["Cart"] = cart;
             }
             return cart;
+        }
+
+        [Authorize]
+        [HttpGet]
+        public ActionResult Checkout()
+        {
+            return View(new ShippingDetails() { Username = User.Identity.Name});
+        }
+
+        [HttpPost]
+        public ActionResult Checkout(ShippingDetails shippingDetails)
+        {
+            Cart cart = GetCart();
+
+            if (ModelState.IsValid)
+            {
+                foreach(IOrderProcessor processor in processors)
+                {
+                    processor.ProcessOrder(cart, shippingDetails);
+                }
+                cart.Clear();
+                return View("Completed");
+            }
+            else
+            {
+                return View(shippingDetails);
+            }
         }
     }
 }
