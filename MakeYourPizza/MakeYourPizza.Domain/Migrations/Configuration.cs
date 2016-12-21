@@ -1,6 +1,7 @@
 namespace MakeYourPizza.Domain.Migrations
 {
     using Entities;
+    using Infrastructure;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
     using System;

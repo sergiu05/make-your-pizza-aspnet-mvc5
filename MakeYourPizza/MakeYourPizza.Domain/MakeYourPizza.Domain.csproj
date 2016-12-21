@@ -139,7 +139,6 @@
     <Compile Include="Concrete\PizzaDbContext.cs" />
     <Compile Include="Entities\AppRole.cs" />
     <Compile Include="Entities\AppUser.cs" />
-    <Compile Include="Entities\AppUserManager.cs" />
     <Compile Include="Entities\BaseEntity.cs" />
     <Compile Include="Entities\Cart.cs" />
     <Compile Include="Entities\Category.cs" />
@@ -147,6 +146,8 @@
     <Compile Include="Entities\Ingredient.cs" />
     <Compile Include="Entities\ProductInterface.cs" />
     <Compile Include="Entities\ShippingDetails.cs" />
+    <Compile Include="Infrastructure\AppRoleManager.cs" />
+    <Compile Include="Infrastructure\AppUserManager.cs" />
     <Compile Include="Migrations\201612021808279_InitialCreate.cs" />
     <Compile Include="Migrations\201612021808279_InitialCreate.Designer.cs">
       <DependentUpon>201612021808279_InitialCreate.cs</DependentUpon>
