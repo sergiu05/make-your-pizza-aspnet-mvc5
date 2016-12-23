@@ -24,5 +24,7 @@ namespace MakeYourPizza.Domain.Abstract
         void Delete(object id);
 
         void Delete(TEntity entityToDelete);
+
+        void Save();
     }
 }

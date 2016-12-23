@@ -37,6 +37,9 @@ namespace MakeYourPizza.WebUI
                     o => System.Web.HttpContext.Current.GetOwinContext().Authentication
                 )
             );
+
+            container.RegisterType<IOrderProcessor, StoreOrder>("storeorder");
+
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }
     }

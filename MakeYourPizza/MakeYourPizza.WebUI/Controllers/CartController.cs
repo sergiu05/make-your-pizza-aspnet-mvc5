@@ -1,6 +1,9 @@
 ﻿using MakeYourPizza.Domain.Abstract;
 using MakeYourPizza.Domain.Entities;
+using MakeYourPizza.Domain.Infrastructure;
 using MakeYourPizza.WebUI.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +16,14 @@ namespace MakeYourPizza.WebUI.Controllers
     {
         private IGenericRepository<Ingredient> repository;
         private IOrderProcessor[] processors;
+        public AppUser CurrentUser
+        {
+            get
+            {
+                return System.Web.HttpContext.Current.GetOwinContext().GetUserManager<AppUserManager>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
+                /* http://stackoverflow.com/questions/20925822/asp-mvc5-identity-how-to-get-current-applicationuser */
+            }
+        }
 
         public CartController(IGenericRepository<Ingredient> repository, IOrderProcessor[] processors)
         {
@@ -66,16 +77,17 @@ namespace MakeYourPizza.WebUI.Controllers
             return View(new ShippingDetails() { Username = User.Identity.Name});
         }
 
+        [Authorize]
         [HttpPost]
-        public ActionResult Checkout(ShippingDetails shippingDetails)
+        public ActionResult Checkout([Bind(Include = "Username, Address, City, PhoneNumber")]ShippingDetails shippingDetails)
         {
             Cart cart = GetCart();
-
+            
             if (ModelState.IsValid)
             {
                 foreach(IOrderProcessor processor in processors)
                 {
-                    processor.ProcessOrder(cart, shippingDetails);
+                    processor.ProcessOrder(cart, shippingDetails, CurrentUser);
                 }
                 cart.Clear();
                 return View("Completed");

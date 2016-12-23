@@ -137,6 +137,7 @@
     <Compile Include="Abstract\IGenericRepository.cs" />
     <Compile Include="Abstract\IOrderProcessor.cs" />
     <Compile Include="Concrete\PizzaDbContext.cs" />
+    <Compile Include="Concrete\StoreOrder.cs" />
     <Compile Include="Entities\AppRole.cs" />
     <Compile Include="Entities\AppUser.cs" />
     <Compile Include="Entities\BaseEntity.cs" />
@@ -164,6 +165,10 @@
     <Compile Include="Migrations\201612141705284_Order_update.Designer.cs">
       <DependentUpon>201612141705284_Order_update.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612231011522_Add_foreign_key_property_to_Order.cs" />
+    <Compile Include="Migrations\201612231011522_Add_foreign_key_property_to_Order.Designer.cs">
+      <DependentUpon>201612231011522_Add_foreign_key_property_to_Order.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -183,6 +188,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612141705284_Order_update.resx">
       <DependentUpon>201612141705284_Order_update.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612231011522_Add_foreign_key_property_to_Order.resx">
+      <DependentUpon>201612231011522_Add_foreign_key_property_to_Order.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
