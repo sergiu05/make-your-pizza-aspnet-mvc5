@@ -1,0 +1,26 @@
+﻿@model MakeYourPizza.WebUI.Models.IngredientSelectListViewModel
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_MasterLayoutAdmin.cshtml";
+}
+
+<div class="dashboard editpage">
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <h2>Edit @Model.Ingredient.Name</h2>
+
+            @using (Html.BeginForm("Edit", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary()
+                @Html.HiddenFor(m => m.Ingredient.Id)
+                @Html.Partial("_CreateOrEdit", Model)
+
+                <input type="submit" value="Save" class="btn btn-primary" />
+            }
+            @Html.ActionLink("Cancel and return to list", "Index")
+        </div>
+    </div>
+</div>
+

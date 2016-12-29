@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
 using System.Web;
+using MakeYourPizza.WebUI.Utilities;
 
 namespace MakeYourPizza.WebUI
 {
@@ -38,6 +39,7 @@ namespace MakeYourPizza.WebUI
                 )
             );
 
+            container.RegisterType<IFileWrapper, FileWrapper>();
             container.RegisterType<IOrderProcessor, StoreOrder>("storeorder");
 
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));

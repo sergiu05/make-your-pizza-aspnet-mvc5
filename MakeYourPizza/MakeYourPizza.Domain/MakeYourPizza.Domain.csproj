@@ -169,6 +169,10 @@
     <Compile Include="Migrations\201612231011522_Add_foreign_key_property_to_Order.Designer.cs">
       <DependentUpon>201612231011522_Add_foreign_key_property_to_Order.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612271229383_Update_Ingredient.cs" />
+    <Compile Include="Migrations\201612271229383_Update_Ingredient.Designer.cs">
+      <DependentUpon>201612271229383_Update_Ingredient.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -191,6 +195,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612231011522_Add_foreign_key_property_to_Order.resx">
       <DependentUpon>201612231011522_Add_foreign_key_property_to_Order.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612271229383_Update_Ingredient.resx">
+      <DependentUpon>201612271229383_Update_Ingredient.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
